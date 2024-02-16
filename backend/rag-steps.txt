@@ -1,0 +1,7 @@
+1. Load text from file
+2. Split text into managable chunks
+3. Embedding chunks
+4. Storing embeddings in a vector store
+5. Similarity search
+6. Dynamic prompting
+7. Passing prompt to LLM
