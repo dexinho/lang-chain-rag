@@ -1,15 +1,33 @@
-import React, { useRef } from "react";
-import { Box, Button } from "@mui/material";
+import React, { useRef, useState } from "react";
+import { Box, Button, useScrollTrigger } from "@mui/material";
+import fetchData from "../../utility/fetchData";
 
 const Upload = () => {
   const uploadRef = useRef(null);
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleUploadClick = () => {
     uploadRef.current.click();
   };
 
-  const handleUploadChange = (e) => {
-    console.log(e.target.files[0]);
+  const handleUploadChange = async (e) => {
+    const file = e.target.files[0];
+    const url = "http://localhost:3000/pdf";
+    const formData = new FormData();
+
+    formData.append("pdfFile", file);
+
+    const body = {
+      method: "POST",
+      body: formData,
+    };
+
+    try {
+      const data = await fetchData({ url, body, isFetching, setIsFetching });
+      console.log(data);
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
@@ -20,7 +38,7 @@ const Upload = () => {
         type="file"
         onChange={handleUploadChange}
       />
-      <Button onClick={handleUploadClick}>Click</Button>
+      <Button onClick={handleUploadClick}>UPLOAD PDF</Button>
     </Box>
   );
 };
