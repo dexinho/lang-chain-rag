@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
-import { Box, Button, useScrollTrigger } from "@mui/material";
+import { Box, Button, Typography, useScrollTrigger } from "@mui/material";
 import fetchData from "../../utility/fetchData";
 
 const Upload = () => {
   const uploadRef = useRef(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [uploadedName, setUploadedName] = useState("");
 
   const handleUploadClick = () => {
     uploadRef.current.click();
@@ -14,6 +15,8 @@ const Upload = () => {
     const file = e.target.files[0];
     const url = "http://localhost:3000/pdf";
     const formData = new FormData();
+
+    setUploadedName(file.name);
 
     formData.append("pdfFile", file);
 
@@ -31,14 +34,17 @@ const Upload = () => {
   };
 
   return (
-    <Box>
+    <Box className='flex gap-4 flex-row'>
       <input
         style={{ display: "none" }}
         ref={uploadRef}
         type="file"
         onChange={handleUploadChange}
       />
-      <Button onClick={handleUploadClick}>UPLOAD PDF</Button>
+      <Button variant="contained" onClick={handleUploadClick}>
+        UPLOAD PDF
+      </Button>
+      <Typography className="flex items-center" variant="caption">{uploadedName}</Typography>
     </Box>
   );
 };
