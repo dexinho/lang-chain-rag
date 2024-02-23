@@ -29,8 +29,6 @@ app.post("/message", async (req, res) => {
 
   const content = await getContent(input);
 
-  console.log(content);
-
   res.status(200).json(content);
 });
 
