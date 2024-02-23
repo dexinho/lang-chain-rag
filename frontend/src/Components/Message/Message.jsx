@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-const Message = ({ message, isLastMessage, picUrl }) => {
+const Message = ({ message, isLastMessage, picUrl, messagesBoxRef }) => {
   const [messageDisplay, setMessageDisplay] = useState("");
   const [index, setIndex] = useState(0);
-  console.log(isLastMessage);
+
   useEffect(() => {
     if (!isLastMessage) {
       setMessageDisplay(message);
       return;
     }
 
+    
     const messageTimeoutId = setTimeout(() => {
       setMessageDisplay(messageDisplay + message[index]);
       setIndex(index + 1);
+
+      messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
     }, 10);
 
     if (index === message.length) clearTimeout(messageTimeoutId);
@@ -21,9 +24,12 @@ const Message = ({ message, isLastMessage, picUrl }) => {
   }, [index]);
 
   return (
-    <div className="flex gap-4 flex-row border p-4 rounded-2xl">
+    <div
+      className="grid gap-4 grid-cols-2 p-4 border rounded-2xl"
+      style={{ gridTemplateColumns: "50px 1fr" }}
+    >
       <div>
-        <img className="w-10 h-10 rounded-2xl" src={picUrl} />
+        <img className="w-full h-10 rounded-2xl" src={picUrl} />
       </div>
       <div>{messageDisplay}</div>
     </div>
