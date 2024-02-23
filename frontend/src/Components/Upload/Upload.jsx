@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Box, Button, Typography, useScrollTrigger } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import fetchData from "../../utility/fetchData";
 
 const Upload = () => {
@@ -26,25 +26,34 @@ const Upload = () => {
     };
 
     try {
+      // setIsFetching(true);
       const data = await fetchData({ url, body, isFetching, setIsFetching });
       console.log(data);
     } catch (err) {
       console.log(err.message);
+    } finally {
+      // setIsFetching(false);
     }
   };
 
   return (
-    <Box className='flex gap-4 flex-row'>
+    <Box className="flex gap-4 flex-col">
       <input
         style={{ display: "none" }}
         ref={uploadRef}
         type="file"
         onChange={handleUploadChange}
       />
-      <Button variant="contained" onClick={handleUploadClick}>
-        UPLOAD PDF
-      </Button>
-      <Typography className="flex items-center" variant="caption">{uploadedName}</Typography>
+      {isFetching ? (
+        <CircularProgress className="w-36"/>
+      ) : (
+        <Button variant="contained" onClick={handleUploadClick}>
+          UPLOAD PDF
+        </Button>
+      )}
+      <Typography className="flex items-center" variant="caption">
+        {uploadedName && !isFetching && `File: ${uploadedName}`}
+      </Typography>
     </Box>
   );
 };
