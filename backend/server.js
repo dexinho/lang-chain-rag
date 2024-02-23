@@ -2,6 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const chatbot = require("./chatbot");
+const sendPDFToPinecone = require("./sendPdfToPinecone");
+const getContent = require("./getContent");
+const retrieveAllRecords = require("./deleteRecords");
+const deleteIndex = require("./deleteIndex");
+const createIndex = require("./createIndex");
 
 const app = express();
 
@@ -17,9 +22,28 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use(cors());
+app.use(express.json());
 
-app.post("/pdf", upload.single("pdfFile"), (req, res) => {
-  chatbot(req.file.path)
+app.post("/message", async (req, res) => {
+  const { input } = req.body;
+
+  const content = await getContent(input);
+
+  console.log(content);
+
+  res.status(200).json(content);
+});
+
+app.post("/pdf", upload.single("pdfFile"), async (req, res) => {
+  try {
+    await deleteIndex("test");
+    await createIndex("test");
+    console.log("-------------");
+    await sendPDFToPinecone(req.file.path);
+    res.sendStatus(200);
+  } catch {
+    res.sendStatus(500);
+  }
 });
 
 const PORT = 3000;
