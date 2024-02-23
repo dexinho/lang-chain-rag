@@ -1,14 +1,12 @@
 const fetchData = async ({ url, body, isFetching, setIsFetching }) => {
+  console.log(isFetching);
   if (isFetching) return;
 
+  setIsFetching(true);
   try {
-    setIsFetching(true);
-
     const res = await fetch(url, body);
 
-    if (res.ok) {
-      return true;
-    }
+    return res;
   } catch (err) {
     console.log(err.message);
   } finally {
